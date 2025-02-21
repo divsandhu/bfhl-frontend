@@ -33,22 +33,24 @@ const InputForm = ({ setResponse }) => {
         try {
             setIsLoading(true);
             setError("");
-
+    
             if (!jsonInput.trim()) {
                 setError("Please enter JSON data");
                 return;
             }
-
+    
             const parsedData = JSON.parse(jsonInput);
-            
+    
             if (!parsedData.data || !Array.isArray(parsedData.data)) {
                 setError('JSON must contain a "data" array');
                 return;
             }
-
+    
             const res = await axios.post("/bfhl", parsedData);
+    
             setLocalResponse(res.data);
             setResponse(res.data);
+            setJsonInput(""); // Clear input after success
         } catch (err) {
             if (err instanceof SyntaxError) {
                 setError("Invalid JSON format. Please check your input.");
@@ -61,6 +63,7 @@ const InputForm = ({ setResponse }) => {
             setIsLoading(false);
         }
     };
+    
 
     const handleFilterChange = (event) => {
         setSelectedFilters(event.target.value);
